@@ -1,0 +1,885 @@
+Конечно. Команда одна, но с разными параметрами/аргументами получаются разные результаты.
+git reset <хеш-коммита> - без параметров/ключей (без кэша коммита не работает) просто сбрасывает состояние (отменяет коммиты до указанного), созданное/изменённое после указанного коммита переходит в неотслеживаемое состояние, но не исчезает/не изменяется назад полностью. Об этом на уроке не рассказано, но для сброса всех изменений (и терминал иногда подсказывает) на момент нужного коммита (куда вернулись) необходимо произвести еще одно действие - use "git restore <file>..." to discard changes in working directory (используйте ... для отмены изменений). Произведя это действие всё вернётся на момент сразу после нужного коммита, до внесения каких либо изменений. Либо можно добавить ключ --hard - это сбросит и удалить все изменения, что были сделаны после нужного коммита, и всё станет так, как было на тот момент (до внесения изменений). Дополнительно для чтения - Раскрытие тайн reset, должно стать понятно. В кратце - использование параметра hard не просто возвращает состояние репозитория на указанный коммит, но и удаляет все внесённые после него изменения (возможно и физически, не подлежащие восстановлению). Есть и сокращённый вывод статуса - почитать.
+
+Для копи-паст текста в терминале, нужно выделить нужгый текст и нажать пкм два раза на выделенном тексте
+
+cd - perehod po papkam
+touch - создание файла
+echo - tekst v terminale ili dobavlenie teksta v fayl
+cat - otobrazhenie soderzhimogo fayla
+ls -a - rasshirennoe otobrazhenie soderzhimogo repo
+rm - remove(udalenie fayla)
+rm -f - remove force(utverditel'noe udalenie fayla)
+mv *name* *new name* - rename file
+mv *name file* ./dir/ - replace file
+clear - очистить историю терминала
+
+git commit -a - создать коммит, с одновременным добавлением в него изменённых файлов(git add+git commit) и открыть редактор, настроенный по умолчанию, для подписи коммита;
+git commit -am 'подпись коммита' - создать коммит, с одновременным добавлением в него всех изменённых файлов(git add+git commit), без вызова редактора, а сразу с указанной подписью;
+git commit -m 'подпись коммита' - создать коммит из текущего состояния индекса (т.е. тех файлов, что готовы для коммита (были ранее добавлены в индекс командой git add имя-файла)), так же без вызова редактора.
+git log - расширенное отображение всех комитов
+git log --oneline - краткое отображение всех комитов без редактора
+git log --graph - отображение коммитов с наложением на схему веток
+git add 'file' - dobavlenie fayla v index(tracking/otslezhivanie izmeneniy/potgotovka fayla k versionirovaniyu)
+git add .\ - добавление в индекс всех файлов репо
+git rm --cached *name file* - udalenie iz indexa
+git status - otobrazhenie statusa(nalichie izmeneniy) repo
+git init - sozdat' repo v papke
+git reset - сброс состояния репо на конкретный(хэш) комит
+git revert - сброс состояния репо созданием нового комита, который отменяет действия предыдущего комита (командой revert возвращаемся к нужному коммиту, вносим изменения, затем закоммитить новый с поправками в названии)
+git restore - сброс состояния конкретного файла на состояние из предыдущего(последнего) комита
+git reflog - otobrazhenie istorii deystviy
+git branch *new vetka* - sozdanie novoy vetki
+git branch -M 'new_name' - переименовать ветку
+git branch - otobrazhenie vseh vetok
+git checkout *vetka* - perekluchitsya na vetku
+git branch *new vetka* *roditelskaya vetka* - sozdanie novoy vetki s nachalom ot nuzhnoy vetki
+git checkout -b *new vetka* - perekluchitsya na novuyu vetku s odnovremennim eyo sozdaniem
+git merge 'nuzhnaya vetka' - добавить изменения из указанной ветки в текущую ветку (слияние)
+git branch -d 'nuzhnaya vetka' - удалить указанную ветку
+git remote add - svyazat' lokalniy i udalenniy repo (git remote add *origin* git@github.com:G-Relaxant/Volgograd-repo-github.git)
+git remote rm 'remote_name' - удалить связь с удалённым репо
+git remote -v - List the current remotes associated with the local repository
+ssh-keygen - sozdanie klucha pri ssh podkluchenii
+git push - vnesti izmeneniya(zagruzit') v udalenniy repo iz lokalnogo
+git push -u *name remote repo* *name new vetka* - vnesti izmeneniya(zagruzit') v udalenniy repo iz lokalnogo s sozdaniem novoy vetki
+git pull - skachat' izmeneniya vetki s udalennogo repo v lokalniy
+git fetch
+git clone - скачать(скопировать) уже настроенный репо
+git diff - показать разницу между текущим состоянием файлов и последним коммитом
+
+Последовательность действий для создания, первичной связки и дальнейшей синхронизации публичного(открытого) репо:
+1. Создать репо на гитхабе
+2. Создать репо на компе
+3. Связать их из локального командой git remote add origin "repos link from github" (link without quotes)
+4. 1) Для загрузки из удалённого репо в локальный используем команду git pull; 2) Для выгрузки из локального на удалённый git push, при са-
+мой первой выгрузке(пуш) нужно использовать команду git push --set-upstream <remote_name> <branch_name>
+
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git add readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ ls
+readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   readme.md
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+[master (root-commit) ae8c3fe] add readme.md
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ echo "edited" > readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ cat readme.md
+edited
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -am 'updated readme.md'
+warning: LF will be replaced by CRLF in readme.md.
+The file will have its original line endings in your working directory
+[master 115d97e] updated readme.md
+ 1 file changed, 1 insertion(+)
+
+
+
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+G1Sup@RyzenSUNkids MINGW64 ~
+$ cd Desktop
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop
+$ cd repo
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+On branch master
+nothing to commit, working tree clean
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -am 'updated readme.md add text'
+warning: LF will be replaced by CRLF in readme.md.
+The file will have its original line endings in your working directory
+[master 08b738a] updated readme.md add text
+ 1 file changed, 2 insertions(+)
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+test2
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ echo "readme2.md"
+readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ ls
+readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git add readme2.md
+fatal: pathspec 'readme2.md' did not match any files
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ touch readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ echo "commit test" > readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ ls
+readme.md  readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ cat readme2.md
+commit test
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        readme2.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        readme2.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git add readme2.md
+warning: LF will be replaced by CRLF in readme2.md.
+The file will have its original line endings in your working directory
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   readme2.md
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git rm --cached "readme2.md"
+rm 'readme2.md'
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        readme2.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git add readme2.md
+warning: LF will be replaced by CRLF in readme2.md.
+The file will have its original line endings in your working directory
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   readme2.md
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+[master d5fedfd] add reade2.md and text
+ 1 file changed, 1 insertion(+)
+ create mode 100644 readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -m 'updated readme2.md new text'
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ ls
+readme.md  readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -m "updated readme2.md new text"
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -m"updated readme2.md new text"
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -m'updated readme2.md new text'
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ cat readme2.md
+commit test
+commit test2 сообщение в команде
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   readme2.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+G1Sup@RyzenSUNkids MINGW64 ~/Desktop/repo (master)
+$ git commit -am'updated readme2.md new text'
+warning: LF will be replaced by CRLF in readme2.md.
+The file will have its original line endings in your working directory
+[master 306df73] updated readme2.md new text
+ 1 file changed, 1 insertion(+)
+
+
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+G1Sup@RyzenSUNkids MINGW64 ~
+$ cd desktop
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop
+$ cd repo
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ ls images
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ ls
+images/  readme.md  readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ ls -a images
+./  ../  .gitkeep
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   .gitignore
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .gitignore
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ cat .gitignore
+config
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git commit -am 'ignore set up'
+warning: LF will be replaced by CRLF in .gitignore.
+The file will have its original line endings in your working directory
+[master 39dc9c9] ignore set up
+ 1 file changed, 1 insertion(+)
+ create mode 100644 .gitignore
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ touch example
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git add example
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git commit -m 'test commit'
+[master ed415f3] test commit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 example
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git log --oneline
+ed415f3 (HEAD -> master) test commit
+39dc9c9 ignore set up
+e4b7877 created images directory
+306df73 updated readme2.md new text
+d5fedfd add reade2.md and text
+08b738a updated readme.md add text
+115d97e updated readme.md
+ae8c3fe add readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git reset 39dc9c9						reset - сброс состояния репо на конкретный(хэш) комит
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git log --oneline
+39dc9c9 (HEAD -> master) ignore set up
+e4b7877 created images directory
+306df73 updated readme2.md new text
+d5fedfd add reade2.md and text
+08b738a updated readme.md add text
+115d97e updated readme.md
+ae8c3fe add readme.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git revert e4b7877						revert - сброс состояния репо созданием нового комита, который отменяет действия предыдущего комита
+[master 4c66781] Revert "created images directory"
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 images/.gitkeep
+								restore - сброс состояния конкретного файла на состояние из предыдущего(последнего) комита
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ ls -a
+./  ../  .git/  .gitignore  config  example  readme.md  readme2.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git reflog
+4c66781 (HEAD -> master) HEAD@{0}: revert: Revert "created images directory"
+ed415f3 HEAD@{1}: reset: moving to ed415f3
+39dc9c9 HEAD@{2}: reset: moving to 39dc9c9
+ed415f3 HEAD@{3}: commit: test commit
+39dc9c9 HEAD@{4}: commit: ignore set up
+e4b7877 HEAD@{5}: commit: created images directory
+306df73 HEAD@{6}: commit: updated readme2.md new text
+d5fedfd HEAD@{7}: commit: add reade2.md and text
+08b738a HEAD@{8}: commit: updated readme.md add text
+115d97e HEAD@{9}: commit: updated readme.md
+ae8c3fe HEAD@{10}: commit (initial): add readme.md
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git branch dev
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git branch
+  dev
+* master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git checkout dev
+Switched to branch 'dev'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ touch dev-branch.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git add dev-branch.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git commit -m 'added dev-branch'
+[dev f727e55] added dev-branch
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 dev-branch.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git log
+commit f727e55d0438cfdec1d7d4a68cefea514eb0eb31 (HEAD -> dev)
+Author: geekbrains <info@geekbrains.ru>
+Date:   Thu Apr 7 01:11:43 2022 +0400
+
+    added dev-branch
+
+commit ed415f30f675ebe046b2bb23d3cc7da6ec0aeb6a (master)
+Author: geekbrains <info@geekbrains.ru>
+Date:   Tue Apr 5 00:57:05 2022 +0400
+
+    test commit
+
+commit 39dc9c9281a838841c67d831610272b5617dc819
+Author: geekbrains <info@geekbrains.ru>
+Date:   Thu Mar 31 17:18:23 2022 +0400
+
+    ignore set up
+
+commit e4b787722922e8902c371a32bbe15d58034dfbba
+Author: geekbrains <info@geekbrains.ru>
+Date:   Wed Mar 23 18:49:52 2022 +0400
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git branch dev-master master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git branch
+* dev
+  dev-master
+  master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev)
+$ git checkout dev-master
+Switched to branch 'dev-master'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev-master)
+$ git checkout -b dev-test
+Switched to a new branch 'dev-test'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (dev-test)
+$ git checkout master
+Switched to branch 'master'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git branch branch-1 master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git branch branch-2 master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
+$ git checkout branch-2
+Switched to branch 'branch-2'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2)
+$ touch branch2.txt
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2)
+$ git add branch2.txt
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2)
+$ git commit -m 'add branch2.txt'
+[branch-2 b695914] add branch2.txt
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 branch2.txt
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2)
+$ git branch branch-2-1 branch-2
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2)
+$ git checkout branch-2-1
+Switched to branch 'branch-2-1'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2-1)
+$ git branch
+  branch-1
+  branch-2
+* branch-2-1
+  dev
+  dev-master
+  dev-test
+  master
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (branch-2-1)
+$ git log --oneline
+b695914 (HEAD -> branch-2-1, branch-2) add branch2.txt
+ed415f3 (master, dev-test, dev-master, branch-1) test commit
+39dc9c9 ignore set up
+e4b7877 created images directory
+306df73 updated readme2.md new text
+d5fedfd add reade2.md and text
+08b738a updated readme.md add text
+115d97e updated readme.md
+ae8c3fe add readme.md
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+G1Sup@RyzenSUNkids MINGW64 ~
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/G1Sup/.ssh/id_rsa):
+Created directory '/c/Users/G1Sup/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /c/Users/G1Sup/.ssh/id_rsa
+Your public key has been saved in /c/Users/G1Sup/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:ZS3F+Vxl8UANj5Kd6apIh14NqaidaB5kHpINl3ztCQk G1Sup@RyzenSUNkids
+The key's randomart image is:
++---[RSA 3072]----+
+|    E      ..o++=|
+|   . o o   ooo B+|
+|  . + + . + +o=.o|
+|   = . o + o oo  |
+|  o =   S o   .  |
+|   = . . o o .   |
+|    o . + o o    |
+|    .= + + .     |
+|   o+ o o .      |
++----[SHA256]-----+
+
+G1Sup@RyzenSUNkids MINGW64 ~
+$ cat /c/Users/G1Sup/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFP8wObPsMDynMYtXrl7UCkfwrkr7m7Jvp2PdWfDJjqDV80vEvRgRnU0NbpOY8+w4gqM5BMSKfhHGwdCaYt3U1XeyL+F80MilRGxE6T+ZJ7aUn4QHDpxDKI8gxGgGc8fr9dnur/qbvUmtjGvFHwBIe+iCbHLsoh1JdI/UsiU3YXFXSeNUYESfWiBTbQ/4KYtG5fmjd6CtLGa902zuwGoDFlxLQLVvvk8znWmP099cQ4yl82xvtaKb8GvHV0TitZj04to45sd3qS9FSPaySwvvOUPypbdi4ccefEXxbt5G9YieJpAQ2wLc3OD65tsVhAxKvkMNIobvWxoyiFNE3GMlRwhesmr/QB/5rDsxXlsByt2gWASxYcsYvOXqUZ+i/smkIiCmt0Gzi8Hm+/ppc8b7s5gNh3NVjKcNeaefdh597zNk4QkF87XKm6Zt2Ej3P13/aEeCp2PjnbTmMyC4SxteT2hyl3Gyyb4G8J2BUnwwnvAD2IoJyhw/7eQX8esb0BQU= G1Sup@RyzenSUNkids
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop
+$ git clone git@github.com:G-Relaxant/project.git project
+Cloning into 'project'...
+The authenticity of host 'github.com (140.82.121.3)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (3/3), done.
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (main)
+$ git remote -v
+origin  git@github.com:G-Relaxant/project.git (fetch)
+origin  git@github.com:G-Relaxant/project.git (push)
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (main)
+$ git checkout -b dev
+Switched to a new branch 'dev'
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ touch dev.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ ls
+README.md  dev.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ echo "# hey" > dev.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ git add dev.md
+warning: LF will be replaced by CRLF in dev.md.
+The file will have its original line endings in your working directory
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ git commit -m 'first dev commit'
+[dev 4eaa408] first dev commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 dev.md
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ git push
+fatal: The current branch dev has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin dev
+
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ git push -u origin dev
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 273 bytes | 273.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'dev' on GitHub by visiting:
+remote:      https://github.com/G-Relaxant/project/pull/new/dev
+remote:
+To github.com:G-Relaxant/project.git
+ * [new branch]      dev -> dev
+branch 'dev' set up to track 'origin/dev'.
+
+G1Sup@RyzenSUNkids MINGW64 ~/desktop/project (dev)
+$ git pull
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), 669 bytes | 5.00 KiB/s, done.
+From github.com:G-Relaxant/project
+   4eaa408..face2fb  dev        -> origin/dev
+Updating 4eaa408..face2fb
+Fast-forward
+ dev.md | 2 ++
+ 1 file changed, 2 insertions(+)
+
+
+
+
+\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\///\\/\/\/\/\//\/\/\/\/
+
+
+
+
+PS C:\Users\user\Desktop\Lesson 2> git checkout master       
+Switched to branch 'master'
+PS C:\Users\user\Desktop\Lesson 2> git merge text_formatting 
+Updating bb745ec..dc92f81
+Fast-forward
+ Markdown instruction.md | 6 ++++++
+ 1 file changed, 6 insertions(+)
+PS C:\Users\user\Desktop\Lesson 2> git status
+On branch master
+nothing to commit, working tree clean
+PS C:\Users\user\Desktop\Lesson 2> git log 
+er, text_formatting)
+Author: Danya <theincredibledanzel@yandex.ru>
+Date:   Sun May 29 05:04:22 2022 +0400
+
+
+commit 9d9ff73ff538ce0f414f0f0ec72eefd64a0ff684
+Author: Danya <theincredibledanzel@yandex.ru>
+Date:   Sun May 29 04:37:05 2022 +0400
+PS C:\Users\user\Desktop\Lesson 2> git branch
+  lists
+* master
+PS C:\Users\user\Desktop\Lesson 2> git branch -d 'text_formatDeleted branch text_formatting (was dc92f81).
+PS C:\Users\user\Desktop\Lesson 2> git branch
+  lists
+* master
+PS C:\Users\user\Desktop\Lesson 2> git branch 'images'
+PS C:\Users\user\Desktop\Lesson 2> git branch
+  images
+  lists
+* master
+
+PS C:\Users\user\Desktop\Lesson 2> git status
+On branch images
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        pirdzhos.png
+nothing added to commit but untracked files present (use "git aPS C:\Users\user\Desktop\Lesson 2> git status
+On branch images
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitignore
+
+nothing added to commit but untracked files present (use "git add" to track)
+PS C:\Users\user\Desktop\Lesson 2> git add '.gitignore'        
+PS C:\Users\user\Desktop\Lesson 2> git commit -m 'added gitignore file'
+[images 6952a9a] added gitignore file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 .gitignore
+PS C:\Users\user\Desktop\Lesson 2> git status                  
+On branch images
+nothing to commit, working tree clean
+
+PS C:\Users\user\Desktop\Lesson 2> git branch  
+* images
+  lists
+  master
+PS C:\Users\user\Desktop\Lesson 2> git checkout 'master'       
+PS C:\Users\user\Desktop\Lesson 2> git branch
+  images
+  lists
+* master
+PS C:\Users\user\Desktop\Lesson 2> git merge images
+Updating dc92f81..6952a9a
+Fast-forward
+ .gitignore              | 1 +
+ Markdown instruction.md | 3 +++
+ 2 files changed, 4 insertions(+)
+PS C:\Users\user\Desktop\Lesson 2> git status
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)   
+rectory)
+        modified:   Markdown instruction.md
+
+")
+PS C:\Users\user\Desktop\Lesson 2> git add 'Markdown instruction.md'
+PS C:\Users\user\Desktop\Lesson 2> git commit -m 'добавили инфо 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\user\Desktop\Lesson 2> git checkout lists
+Switched to branch 'lists'
+PS C:\Users\user\Desktop\Lesson 2> git checkout master
+Switched to branch 'master'
+PS C:\Users\user\Desktop\Lesson 2> git merge lists
+Auto-merging Markdown instruction.md
+CONFLICT (content): Merge conflict in Markdown instruction.md  
+Automatic merge failed; fix conflicts and then commit the result.
+PS C:\Users\user\Desktop\Lesson 2>
+                                   git status
+You have unmerged paths.
+  (use "git merge --abort" to abort the merge)
+
+  (use "git add <file>..." to mark resolution)
+        both modified:   Markdown instruction.md
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\Users\user\Desktop\Lesson 2> git add 'Markdown instruction.md'
+PS C:\Users\user\Desktop\Lesson 2> git commit -m 'слили изменения с учётом конфликтов из ветки lists'
+[master 943c7da] слили изменения с учётом конфликтов из ветки lists
+PS C:\Users\user\Desktop\Lesson 2> git status
+On branch master
+nothing to commit, working tree clean
+PS C:\Users\user\Desktop\Lesson 2> git log
+)
+Merge: 59d487d 1c8a3c0
+Author: Danya <theincredibledanzel@yandex.ru>
+Date:   Sun May 29 17:52:11 2022 +0400
+
+    слили изменения с учётом конфликтов из ветки lists
+
+commit 59d487d6c39fbcf8656d1e096d0b6c884d803dd9
+Author: Danya <theincredibledanzel@yandex.ru>
+Date:   Sun May 29 17:25:35 2022 +0400
+
+PS C:\Users\user\Desktop\Lesson 2> git log --graph
+ster)
+|\  Merge: 59d487d 1c8a3c0
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 17:52:11 2022 +0400
+| |
+| |     слили изменения с учётом конфликтов из ветки lists     
+| |
+| * commit 1c8a3c042a93e156ce4a148a2514a44a3532a22e (lists)    
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 04:50:29 2022 +0400
+| |
+PS C:\Users\user\Desktop\Lesson 2> git log --graph
+*   commit 943c7dac93ba167607e1ba97a0a73b1fcf73455e (HEAD -> master)
+|\  Merge: 59d487d 1c8a3c0
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 17:52:11 2022 +0400
+| |
+| |     слили изменения с учётом конфликтов из ветки lists     
+| |
+| * commit 1c8a3c042a93e156ce4a148a2514a44a3532a22e (lists)    
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 04:50:29 2022 +0400
+| |
+| |     добавили нумерованные и ненумерованные списки
+| |
+* | commit 59d487d6c39fbcf8656d1e096d0b6c884d803dd9
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 17:25:35 2022 +0400
+| |
+| |     добавили информация про списки
+| |
+* | commit 6952a9aaed544f710a15c0fa8d20fcfe45dd3eea (images)   
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 17:13:31 2022 +0400
+| |
+| |     added gitignore file
+| |
+* | commit c31f1dca252b1e30fbee8e9649ddc47e46a7731e
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 17:09:37 2022 +0400
+| |
+| |     добавили инструкцию по работе с изображениями
+| |
+* | commit dc92f81d71d9f11c8041052a8ba05dc725ce54ec
+| | Author: Danya <theincredibledanzel@yandex.ru>
+| | Date:   Sun May 29 05:04:22 2022 +0400
+| |
+| |     добавили альтернативные способы выделения текста       
+| |
+* | commit 9d9ff73ff538ce0f414f0f0ec72eefd64a0ff684
+|/  Author: Danya <theincredibledanzel@yandex.ru>
+|   Date:   Sun May 29 04:37:05 2022 +0400
+|
+|       добавили выделение полужирным и курсивом
+|
+* commit bb745ec7b75dcaf112d156945a9c8a6935762110
+| Author: Danya <theincredibledanzel@yandex.ru>
+| Date:   Sun May 29 04:26:01 2022 +0400
+|
+|     added file structure
+|
+* commit 960697b41ffdf4f9d16446704618aa6e158b643b
+  Author: Danya <theincredibledanzel@yandex.ru>
+  Date:   Sun May 29 04:22:22 2022 +0400
+
+      initial commit
