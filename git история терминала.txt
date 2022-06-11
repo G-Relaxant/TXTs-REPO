@@ -1,7 +1,7 @@
 Конечно. Команда одна, но с разными параметрами/аргументами получаются разные результаты.
 git reset <хеш-коммита> - без параметров/ключей (без кэша коммита не работает) просто сбрасывает состояние (отменяет коммиты до указанного), созданное/изменённое после указанного коммита переходит в неотслеживаемое состояние, но не исчезает/не изменяется назад полностью. Об этом на уроке не рассказано, но для сброса всех изменений (и терминал иногда подсказывает) на момент нужного коммита (куда вернулись) необходимо произвести еще одно действие - use "git restore <file>..." to discard changes in working directory (используйте ... для отмены изменений). Произведя это действие всё вернётся на момент сразу после нужного коммита, до внесения каких либо изменений. Либо можно добавить ключ --hard - это сбросит и удалить все изменения, что были сделаны после нужного коммита, и всё станет так, как было на тот момент (до внесения изменений). Дополнительно для чтения - Раскрытие тайн reset, должно стать понятно. В кратце - использование параметра hard не просто возвращает состояние репозитория на указанный коммит, но и удаляет все внесённые после него изменения (возможно и физически, не подлежащие восстановлению). Есть и сокращённый вывод статуса - почитать.
 
-Для копи-паст текста в терминале, нужно выделить нужгый текст и нажать пкм два раза на выделенном тексте
+Для копи-паст текста в терминале(VSCode), нужно выделить нужный текст и нажать пкм два раза на выделенном тексте
 
 cd - perehod po papkam
 touch - создание файла
@@ -20,6 +20,7 @@ git commit -m 'подпись коммита' - создать коммит из
 git log - расширенное отображение всех комитов
 git log --oneline - краткое отображение всех комитов без редактора
 git log --graph - отображение коммитов с наложением на схему веток
+git reflog - otobrazhenie istorii deystviy
 git add 'file' - dobavlenie fayla v index(tracking/otslezhivanie izmeneniy/potgotovka fayla k versionirovaniyu)
 git add .\ - добавление в индекс всех файлов репо
 git rm --cached *name file* - udalenie iz indexa
@@ -28,7 +29,6 @@ git init - sozdat' repo v papke
 git reset - сброс состояния репо на конкретный(хэш) комит
 git revert - сброс состояния репо созданием нового комита, который отменяет действия предыдущего комита (командой revert возвращаемся к нужному коммиту, вносим изменения, затем закоммитить новый с поправками в названии)
 git restore - сброс состояния конкретного файла на состояние из предыдущего(последнего) комита
-git reflog - otobrazhenie istorii deystviy
 git branch *new vetka* - sozdanie novoy vetki
 git branch -M 'new_name' - переименовать ветку
 git branch - otobrazhenie vseh vetok
@@ -38,15 +38,18 @@ git checkout -b *new vetka* - perekluchitsya na novuyu vetku s odnovremennim eyo
 git merge 'nuzhnaya vetka' - добавить изменения из указанной ветки в текущую ветку (слияние)
 git branch -d 'nuzhnaya vetka' - удалить указанную ветку
 git remote add - svyazat' lokalniy i udalenniy repo (git remote add *origin* git@github.com:G-Relaxant/Volgograd-repo-github.git)
-git remote rm 'remote_name' - удалить связь с удалённым репо
+git remote rm 'remote_name' - удалить связь с удалённым(remote) репо
 git remote -v - List the current remotes associated with the local repository
 ssh-keygen - sozdanie klucha pri ssh podkluchenii
 git push - vnesti izmeneniya(zagruzit') v udalenniy repo iz lokalnogo
 git push -u *name remote repo* *name new vetka* - vnesti izmeneniya(zagruzit') v udalenniy repo iz lokalnogo s sozdaniem novoy vetki
-git pull - skachat' izmeneniya vetki s udalennogo repo v lokalniy
-git fetch
+git pull - skachat' izmeneniya vetki s udalennogo repo v lokalniy ( UTOCHNIT' !!! ) (sostavnaya komanda fetch+merge)
+git fetch - skachat' izmeneniya s udalennogo repo v lokalniy
 git clone - скачать(скопировать) уже настроенный репо
 git diff - показать разницу между текущим состоянием файлов и последним коммитом
+git diff 111111 222222 - показать разницу между двумя конкретными комитами
+git --help (or git -H) - справка\помощь по гиту в общем
+git <command> --help - справка\помощь по нужной команде
 
 Последовательность действий для создания, первичной связки и дальнейшей синхронизации публичного(открытого) репо:
 1. Создать репо на гитхабе
@@ -426,7 +429,7 @@ d5fedfd add reade2.md and text
 ae8c3fe add readme.md
 
 G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
-$ git reset 39dc9c9						reset - сброс состояния репо на конкретный(хэш) комит
+$ git reset 39dc9c9						reset - сброс состояния репо на конкретный(хэш) комит (НО ЭТО НЕ ТОЧНО)
 
 G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
 $ git log --oneline
@@ -439,11 +442,11 @@ d5fedfd add reade2.md and text
 ae8c3fe add readme.md
 
 G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
-$ git revert e4b7877						revert - сброс состояния репо созданием нового комита, который отменяет действия предыдущего комита
+$ git revert e4b7877						revert - сброс состояния репо созданием нового комита, который отменяет действия предыдущего комита (НО ЭТО НЕ ТОЧНО)
 [master 4c66781] Revert "created images directory"
  1 file changed, 0 insertions(+), 0 deletions(-)
  delete mode 100644 images/.gitkeep
-								restore - сброс состояния конкретного файла на состояние из предыдущего(последнего) комита
+								restore - сброс состояния конкретного файла на состояние из предыдущего(последнего) комита (НО ЭТО НЕ ТОЧНО)
 G1Sup@RyzenSUNkids MINGW64 ~/desktop/repo (master)
 $ ls -a
 ./  ../  .git/  .gitignore  config  example  readme.md  readme2.md
@@ -598,29 +601,29 @@ Enter same passphrase again:
 Your identification has been saved in /c/Users/G1Sup/.ssh/id_rsa
 Your public key has been saved in /c/Users/G1Sup/.ssh/id_rsa.pub
 The key fingerprint is:
-SHA256:ZS3F+Vxl8UANj5Kd6apIh14NqaidaB5kHpINl3ztCQk G1Sup@RyzenSUNkids
+SHA256:**************************************** G1Sup@RyzenSUNkids
 The key's randomart image is:
 +---[RSA 3072]----+
-|    E      ..o++=|
-|   . o o   ooo B+|
-|  . + + . + +o=.o|
-|   = . o + o oo  |
-|  o =   S o   .  |
-|   = . . o o .   |
-|    o . + o o    |
-|    .= + + .     |
-|   o+ o o .      |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
+| *************** |
 +----[SHA256]-----+
 
 G1Sup@RyzenSUNkids MINGW64 ~
 $ cat /c/Users/G1Sup/.ssh/id_rsa.pub
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFP8wObPsMDynMYtXrl7UCkfwrkr7m7Jvp2PdWfDJjqDV80vEvRgRnU0NbpOY8+w4gqM5BMSKfhHGwdCaYt3U1XeyL+F80MilRGxE6T+ZJ7aUn4QHDpxDKI8gxGgGc8fr9dnur/qbvUmtjGvFHwBIe+iCbHLsoh1JdI/UsiU3YXFXSeNUYESfWiBTbQ/4KYtG5fmjd6CtLGa902zuwGoDFlxLQLVvvk8znWmP099cQ4yl82xvtaKb8GvHV0TitZj04to45sd3qS9FSPaySwvvOUPypbdi4ccefEXxbt5G9YieJpAQ2wLc3OD65tsVhAxKvkMNIobvWxoyiFNE3GMlRwhesmr/QB/5rDsxXlsByt2gWASxYcsYvOXqUZ+i/smkIiCmt0Gzi8Hm+/ppc8b7s5gNh3NVjKcNeaefdh597zNk4QkF87XKm6Zt2Ej3P13/aEeCp2PjnbTmMyC4SxteT2hyl3Gyyb4G8J2BUnwwnvAD2IoJyhw/7eQX8esb0BQU= G1Sup@RyzenSUNkids
+ssh-rsa ***********************************MNOGO ZVYOZDOCHEK DALEE --->>>  G1Sup@RyzenSUNkids
 
 G1Sup@RyzenSUNkids MINGW64 ~/desktop
 $ git clone git@github.com:G-Relaxant/project.git project
 Cloning into 'project'...
 The authenticity of host 'github.com (140.82.121.3)' can't be established.
-ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+ED25519 key fingerprint is SHA256:****************************************.
 This key is not known by any other names
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
