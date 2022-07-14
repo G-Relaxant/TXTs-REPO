@@ -1,0 +1,11 @@
+cd - perehod po papkam
+touch - создание файла
+mkdir dir_name - создать новую папку
+echo - tekst v terminale ili dobavlenie teksta v fayl
+cat - otobrazhenie soderzhimogo fayla
+ls -a - rasshirennoe otobrazhenie soderzhimogo repo
+rm - remove(udalenie fayla)
+rm -f - remove force(utverditel'noe udalenie fayla)
+mv *name* *new name* - rename file
+mv *name file* ./dir/ - replace file
+clear - очистить историю терминала

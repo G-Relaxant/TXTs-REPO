@@ -5,6 +5,7 @@ git reset <хеш-коммита> - без параметров/ключей (б
 
 cd - perehod po papkam
 touch - создание файла
+mkdir dir_name - создать новую папку
 echo - tekst v terminale ili dobavlenie teksta v fayl
 cat - otobrazhenie soderzhimogo fayla
 ls -a - rasshirennoe otobrazhenie soderzhimogo repo
