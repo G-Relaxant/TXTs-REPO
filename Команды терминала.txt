@@ -9,3 +9,6 @@ rm -f - remove force(utverditel'noe udalenie fayla)
 mv *name* *new name* - rename file
 mv *name file* ./dir/ - replace file
 clear - очистить историю терминала
+
+только линукс(федора)
+sudo dnf install file_name.rpm   установка рпм пакета через консоль, открытой в папке с файлом
